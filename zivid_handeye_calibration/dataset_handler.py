@@ -109,7 +109,8 @@ class DatasetManager:
                         data = yaml.safe_load(f)
                         # Handle your specific YAML structure: {"data": [...], "rows": 4, "cols": 4}
                         pose = np.array(data["data"]).reshape(4, 4)
-                
+                        pose[:3, 3] *= 1000
+
                 if pose is None:
                     print(f"Skipping {s_dir.name}: No robot_pose (.npy or .yaml) found.")
                     continue
