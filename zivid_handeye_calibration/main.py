@@ -113,11 +113,12 @@ def main():
                 camera_frame="zivid_optical_frame",
                 reference_frame="root_link"
             )
-            
+            result_matrix_m = result_matrix.copy()
+            result_matrix_m[:3, 3] *= 0.001
             print("\n" + "="*20)
             print("CALIBRATION SUCCESS")
             print("="*20)
-            print(result_matrix)
+            print(result_matrix_m)
             
         except Exception as e:
             print(f"❌ Calibration failed: {e}")
