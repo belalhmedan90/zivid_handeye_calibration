@@ -20,9 +20,15 @@ class ZividInterface:
                             If False, uses Eye-in-Hand (camera on robot).
         """
         self.app = zivid.Application()
-        self.camera = self.app.connect_camera()
+        self.camera: Optional[zivid.Camera] = None
         self.hand_to_eye = hand_to_eye
         self.settings: Optional[zivid.Settings] = None
+
+    def _ensure_connected(self):
+            """Internal helper to connect only when hardware is required."""
+            if self.camera is None:
+                print("Connecting to Zivid camera...")
+                self.camera = self.app.connect_camera()
 
     def configure_capture_assistant(self, max_time_ms: int = 1200) -> None:
         """
@@ -31,6 +37,7 @@ class ZividInterface:
         Args:
             max_time_ms: Maximum allowed capture time in milliseconds.
         """
+        self._ensure_connected()
         suggest_params = zivid.capture_assistant.SuggestSettingsParameters(
             max_capture_time=timedelta(milliseconds=max_time_ms),
             ambient_light_frequency=zivid.capture_assistant.SuggestSettingsParameters.AmbientLightFrequency.hz50
@@ -47,6 +54,7 @@ class ZividInterface:
         Returns:
             A DetectionResult object if successful, None otherwise.
         """
+        self._ensure_connected()
         if not self.settings:
             self.configure_capture_assistant()
 
