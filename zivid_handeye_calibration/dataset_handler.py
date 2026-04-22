@@ -132,9 +132,7 @@ class DatasetManager:
                 with open(pose_yaml, "r", encoding="utf-8") as f:
                     data = yaml.safe_load(f)
                     pose = np.array(data["data"]).reshape(4, 4)
-
-                    # ⚠️ Only scale if you KNOW your dataset is in meters
-                    # pose[:3, 3] *= 1000
+                    pose[:3, 3] *= 1000
 
             if pose is None:
                 print(f"⚠️ Skipping {s_dir.name}: no pose")
